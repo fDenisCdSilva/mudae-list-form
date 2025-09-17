@@ -8,13 +8,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
             padding: 20px;
         }
 
         .container {
             max-width: 900px;
-            background: white;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             padding: 25px;
@@ -36,7 +34,6 @@
         }
 
         .btn-primary {
-            background-color: #0d6efd;
             border: none;
             padding: 10px 20px;
             margin: 5px;
@@ -47,7 +44,6 @@
         }
 
         .result-area {
-            background-color: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
             margin-top: 20px;
@@ -66,23 +62,23 @@
     </style>
 </head>
 
-<body>
-    <div class="container">
+<body class="bg-dark text-white">
+    <div class="container bg-white bg-opacity-10">
         <h1>🔍 Formatar Mudae</h1>
         <p class="text-center">Insira os textos abaixo para extrair apenas os nomes</p>
 
         <form id="formatForm">
-            <div class="result-area">
+            <div class="result-area bg-light bg-opacity-10">
                 <label for="inputText" class="form-label">Texto para formatar:</label>
-                <textarea id="inputText" rows="8" placeholder="Cole aqui os textos, um por linha"></textarea>
+                <textarea class="bg-dark text-bg-dark" id="inputText" rows="8" placeholder="Cole aqui os textos, um por linha"></textarea>
                 <button type="button" id="separatorButton" class="btn btn-primary">Separador</button>
                 <button type="button" id="listButton" class="btn btn-success">Lista</button>
             </div>
         </form>
 
-        <div class="result-area invisible" id="resultArea">
+        <div class="result-area bg-light bg-opacity-10 invisible" id="resultArea">
             <label for="outputText" class="form-label">Resultado:</label>
-            <textarea id="outputText" rows="8" readonly></textarea>
+            <textarea class="bg-dark text-bg-dark" id="outputText" rows="8" readonly></textarea>
             <button class="btn btn-primary" id="copyButton">Copiar Resultado</button>
             <button class="btn btn-secondary" id="clearButton">Limpar Tudo</button>
         </div>
