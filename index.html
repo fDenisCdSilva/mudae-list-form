@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatar Listas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #0d6efd;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        textarea {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+
+        .result-area {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .btn-success {
+            background-color: #198754;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+
+        .btn-success:hover {
+            background-color: #157347;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 Formatar Mudae</h1>
+        <p class="text-center">Insira os textos abaixo para extrair apenas os nomes</p>
+
+        <form id="formatForm">
+            <div class="result-area">
+                <label for="inputText" class="form-label">Texto para formatar:</label>
+                <textarea id="inputText" rows="8" placeholder="Cole aqui os textos, um por linha"></textarea>
+                <button type="button" id="separatorButton" class="btn btn-primary">Separador</button>
+                <button type="button" id="listButton" class="btn btn-success">Lista</button>
+            </div>
+        </form>
+
+        <div class="result-area invisible" id="resultArea">
+            <label for="outputText" class="form-label">Resultado:</label>
+            <textarea id="outputText" rows="8" readonly></textarea>
+            <button class="btn btn-primary" id="copyButton">Copiar Resultado</button>
+            <button class="btn btn-secondary" id="clearButton">Limpar Tudo</button>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const inputText = document.getElementById('inputText');
+        const outputText = document.getElementById('outputText');
+        const separatorButton = document.getElementById('separatorButton');
+        const listButton = document.getElementById('listButton');
+        const copyButton = document.getElementById('copyButton');
+        const clearButton = document.getElementById('clearButton');
+        const resultArea = document.getElementById('resultArea');
+
+        // Função para extrair nomes
+        function extrairNomeUniversal(string) {
+            return string
+                .replace(/^\d+\s*-\s*/, '')  // Remove números no início
+                .replace(/\s*[✅⭐🔐💞=>|·].*$/u, '')  // Remove emojis e caracteres especiais
+                .trim();  // Remove espaços extras
+        }
+
+        // Função para formatar o texto com separador
+        function formatarComSeparador() {
+            const texto = inputText.value;
+            const linhas = texto.split('\n');
+            const nomes = linhas.map(extrairNomeUniversal).filter(nome => nome !== '');
+            outputText.value = nomes.join('$');
+        }
+
+        // Função para formatar o texto como lista
+        function formatarComoLista() {
+            const texto = inputText.value;
+            const linhas = texto.split('\n');
+            const nomes = linhas.map(extrairNomeUniversal).filter(nome => nome !== '');
+            outputText.value = nomes.join('\n');
+        }
+
+        // Função para copiar texto
+        function copiarTexto() {
+            outputText.select();
+            document.execCommand('copy');
+
+            // Feedback visual
+            copyButton.textContent = '✓ Copiado!';
+            setTimeout(() => {
+                copyButton.textContent = 'Copiar Resultado';
+            }, 1234);
+        }
+        
+        // Função para mostrar área de resultado
+        function toggleResultArea() {
+            resultArea.classList.remove('invisible');
+        }
+
+        // Função para limpar campos
+        function limparCampos() {
+            inputText.value = '';
+            outputText.value = '';
+            inputText.focus();
+        }
+
+        // Event listeners
+        separatorButton.addEventListener('click', formatarComSeparador);
+        separatorButton.addEventListener('click', toggleResultArea);
+        listButton.addEventListener('click', formatarComoLista);
+        listButton.addEventListener('click', toggleResultArea);
+        copyButton.addEventListener('click', copiarTexto);
+        clearButton.addEventListener('click', limparCampos);
+
+
+        // Focar no campo de entrada quando a página carrega
+        window.addEventListener('load', () => {
+            inputText.focus();
+        });
+    </script>
+</body>
+
+</html>
