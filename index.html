@@ -65,7 +65,6 @@
 <body class="bg-black text-white">
     <div class="p-md-2"><h1>🔍 Formatar Mudae</h1></div>
     <div class="container bg-dark bg-opacity-25">
-        
         <p class="text-center">Insira os textos abaixo para extrair apenas os nomes</p>
 
         <form id="formatForm">
@@ -94,6 +93,7 @@
         const copyButton = document.getElementById('copyButton');
         const clearButton = document.getElementById('clearButton');
         const resultArea = document.getElementById('resultArea');
+        const textolabel = document.getElementsByClassName('form-label');
 
         // Função para extrair nomes
         function extrairNomeUniversal(string) {
@@ -109,7 +109,11 @@
             const texto = inputText.value;
             const linhas = texto.split('\n');
             const nomes = linhas.map(extrairNomeUniversal).filter(nome => nome !== '');
+            resultArea.classList.remove('invisible');
             outputText.value = nomes.join('$');
+            textolabel[1].textContent = 'Resultado:'+ ' (' + texto.trim().length + ') caracters';
+            
+            
         }
 
         // Função para formatar o texto como lista
@@ -117,7 +121,10 @@
             const texto = inputText.value;
             const linhas = texto.split('\n');
             const nomes = linhas.map(extrairNomeUniversal).filter(nome => nome !== '');
+            resultArea.classList.remove('invisible');
             outputText.value = nomes.join('\n');
+            textolabel[1].textContent = 'Resultado:'+ ' (' + texto.trim().length + ') caracters';
+            
         }
 
         // Função para copiar texto
@@ -132,11 +139,6 @@
             }, 1234);
         }
         
-        // Função para mostrar área de resultado
-        function toggleResultArea() {
-            resultArea.classList.remove('invisible');
-        }
-
         // Função para limpar campos
         function limparCampos() {
             inputText.value = '';
@@ -146,9 +148,7 @@
 
         // Event listeners
         separatorButton.addEventListener('click', formatarComSeparador);
-        separatorButton.addEventListener('click', toggleResultArea);
         listButton.addEventListener('click', formatarComoLista);
-        listButton.addEventListener('click', toggleResultArea);
         copyButton.addEventListener('click', copiarTexto);
         clearButton.addEventListener('click', limparCampos);
 
@@ -161,4 +161,3 @@
 </body>
 
 </html>
-
