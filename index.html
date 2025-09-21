@@ -63,14 +63,17 @@
 </head>
 
 <body class="bg-black text-white">
-    <div class="p-md-2"><h1>🔍 Formatar Mudae</h1></div>
+    <div class="p-md-2">
+        <h1>🔍 Formatar Mudae</h1>
+    </div>
     <div class="container bg-dark bg-opacity-25">
         <p class="text-center">Insira os textos abaixo para extrair apenas os nomes</p>
 
         <form id="formatForm">
             <div class="result-area bg-dark bg-opacity-50">
                 <label for="inputText" class="form-label">Texto para formatar:</label>
-                <textarea class="bg-dark text-bg-dark" id="inputText" rows="8" placeholder="Cole aqui os textos, um por linha"></textarea>
+                <textarea class="bg-dark text-bg-dark" id="inputText" rows="8"
+                    placeholder="Cole aqui os textos, um por linha"></textarea>
                 <button type="button" id="separatorButton" class="btn btn-primary">Separador</button>
                 <button type="button" id="listButton" class="btn btn-success">Lista</button>
             </div>
@@ -95,40 +98,52 @@
         const resultArea = document.getElementById('resultArea');
         const textolabel = document.getElementsByClassName('form-label');
 
-        // Função para extrair nomes
+        // Função para extrair nomes - CORRIGIDA
         function extrairNomeUniversal(string) {
             return string
-                .replace(/^\d+\s*-\s*/, '')  // Remove números no início
-                .replace(/\s*[✅⭐🔐💞=>|·].*$/u, '')  // Remove emojis e caracteres especiais
-                .replace(/\s*~.*$/, '') // Remove texto após '~'
+                .replace(/^#?\d+[\d.]*\s*-\s*/, '')  // Remove números no início (com ou sem #)
+                .replace(/\s*-.*$/, '')  // Remove tudo após o hífen (incluindo o hífen)
+                .replace(/\s*[✅⭐🔐💞=>|·~].*$/u, '')  // Remove emojis e caracteres especiais
                 .trim();  // Remove espaços extras
         }
 
         // Função para formatar o texto com separador
         function formatarComSeparador() {
             const texto = inputText.value;
+            if (!texto.trim()) {
+                alert('Por favor, insira algum texto primeiro.');
+                return;
+            }
+
             const linhas = texto.split('\n');
             const nomes = linhas.map(extrairNomeUniversal).filter(nome => nome !== '');
             resultArea.classList.remove('invisible');
             outputText.value = nomes.join('$');
-            textolabel[1].textContent = 'Resultado:'+ ' (' + texto.trim().length + ') caracters';
-            
-            
+            textolabel[1].textContent = 'Resultado: (' + outputText.value.length + ') caracteres';
         }
 
         // Função para formatar o texto como lista
         function formatarComoLista() {
             const texto = inputText.value;
+            if (!texto.trim()) {
+                alert('Por favor, insira algum texto primeiro.');
+                return;
+            }
+
             const linhas = texto.split('\n');
             const nomes = linhas.map(extrairNomeUniversal).filter(nome => nome !== '');
             resultArea.classList.remove('invisible');
             outputText.value = nomes.join('\n');
-            textolabel[1].textContent = 'Resultado:'+ ' (' + texto.trim().length + ') caracters';
-            
+            textolabel[1].textContent = 'Resultado: (' + outputText.value.length + ') caracteres';
         }
 
         // Função para copiar texto
         function copiarTexto() {
+            if (!outputText.value) {
+                alert('Nada para copiar. Gere um resultado primeiro.');
+                return;
+            }
+
             outputText.select();
             document.execCommand('copy');
 
@@ -138,11 +153,13 @@
                 copyButton.textContent = 'Copiar Resultado';
             }, 1234);
         }
-        
+
         // Função para limpar campos
         function limparCampos() {
             inputText.value = '';
             outputText.value = '';
+            resultArea.classList.add('invisible');
+            textolabel[1].textContent = 'Resultado: (0) caracteres';
             inputText.focus();
         }
 
@@ -152,12 +169,12 @@
         copyButton.addEventListener('click', copiarTexto);
         clearButton.addEventListener('click', limparCampos);
 
-
         // Focar no campo de entrada quando a página carrega
         window.addEventListener('load', () => {
             inputText.focus();
         });
     </script>
+
 </body>
 
 </html>
