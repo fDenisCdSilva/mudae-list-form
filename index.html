@@ -101,14 +101,28 @@
 
         // Função para extrair nomes - CORRIGIDA
         function extrairNomeUniversal(string) {
-            return string
-                .replace(/^#?\d+[\d.]*\s*-\s*/, '')  // Remove números no início (com ou sem #)
-                .replace(/\s*-.*$/, '')  // Remove tudo após o hífen (incluindo o hífen)
-                .replace(/\s*[✅⭐🔐💞=>|·~].*$/u, '')  // Remove emojis e caracteres especiais
-                .trim();  // Remove espaços extras
+            let nome = string.replace(/^#?\d+[\d.]*\s*-\s*/, '').trim();
+            const matchSeparador = nome.match(/(.+?)\s+-\s+(.+)/);
+            
+            if (matchSeparador) {
+                const antesDoHifen = matchSeparador[1].trim();
+                const depoisDoHifen = matchSeparador[2].trim();
+                
+                if (antesDoHifen.includes('-') && !antesDoHifen.includes(' ')) {
+                    const padroesDescricao = /^(the|a|an|daily|life|of|episode|season|part|chapter|\d|·)/i;
+                    if (padroesDescricao.test(depoisDoHifen)) {
+                        nome = antesDoHifen;
+                    } else {
+                        nome = antesDoHifen + ' - ' + depoisDoHifen.split(/\s*[·•·●·■·□·○·◎·◇·◆·★·☆=>|~]/)[0];
+                    }
+                } else {
+                    nome = antesDoHifen;
+                }
+            }
+            nome = nome.replace(/\s*[✅⭐🔐💞=>|·~•·●·■·□·○·◎·◇·◆·★·☆].*$/u, '').trim();      
+            return nome;
         }
-
-        // Função para formatar o texto com separador
+        
         function formatarComSeparador() {
             const texto = inputText.value;
             if (!texto.trim()) {
@@ -123,7 +137,6 @@
             textolabel[1].textContent = 'Resultado: (' + outputText.value.length + ') caracteres';
         }
 
-        // Função para formatar o texto como lista
         function formatarComoLista() {
             const texto = inputText.value;
             if (!texto.trim()) {
@@ -138,7 +151,6 @@
             textolabel[1].textContent = 'Resultado: (' + outputText.value.length + ') caracteres';
         }
 
-        // Função para copiar texto
         function copiarTexto() {
             if (!outputText.value) {
                 alert('Nada para copiar. Gere um resultado primeiro.');
@@ -148,14 +160,12 @@
             outputText.select();
             document.execCommand('copy');
 
-            // Feedback visual
             copyButton.textContent = '✓ Copiado!';
             setTimeout(() => {
                 copyButton.textContent = 'Copiar Resultado';
             }, 1234);
         }
-
-        // Função para limpar campos
+        
         function limparCampos() {
             inputText.value = '';
             outputText.value = '';
@@ -164,13 +174,11 @@
             inputText.focus();
         }
 
-        // Event listeners
         separatorButton.addEventListener('click', formatarComSeparador);
         listButton.addEventListener('click', formatarComoLista);
         copyButton.addEventListener('click', copiarTexto);
         clearButton.addEventListener('click', limparCampos);
 
-        // Focar no campo de entrada quando a página carrega
         window.addEventListener('load', () => {
             inputText.focus();
         });
@@ -179,4 +187,5 @@
 </body>
 
 </html>
+
 
